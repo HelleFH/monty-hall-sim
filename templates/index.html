@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monty Hall Problem Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        #typewriter {
+            white-space: pre-wrap; /* Allow text to wrap and display correctly */
+            overflow: hidden; /* Ensures text is not visible until animated */
+            border-right: .15em solid orange; /* Typing cursor effect */
+        }
+        .hidden {
+            display: none; /* Initially hide the success rates */
+        }
+    </style>
+</head>
+<body>
+    <h1>Monty Hall Problem Simulation</h1>
+
+    <h2>Control Simulation</h2>
+    <button id="start-button">Start Simulation</button>
+    <button id="stop-button" class="hidden">Stop Simulation</button>
+
+    <h2>Simulation Counter</h2>
+    <p id="counter">Simulations Run: 0</p>
+
+    <h2>Simulation Output</h2>
+    <pre id="typewriter"></pre>
+
+    <h2>Simulation Results</h2>
+    <div id="results" class="hidden">
+        <p>Games won without switching: <span id="games_won_not_switching">0</span></p>
+        <p>Games won with switching: <span id="games_won_switching">0</span></p>
+    </div>
+
+    <script>
+        let running = false;
+        let counter = 0;
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            startSimulation();
+        });
+
+        document.getElementById('stop-button').addEventListener('click', () => {
+            stopSimulation();
+        });
+
+        function startSimulation() {
+            fetch('/start_simulation', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'started') {
+                        running = true;
+                        counter = 0;
+                        document.getElementById('start-button').classList.add('hidden');
+                        document.getElementById('stop-button').classList.remove('hidden');
+                        document.getElementById('typewriter').textContent = '';
+                        document.getElementById('results').classList.add('hidden');
+                        document.getElementById('games_won_not_switching').textContent = '0';
+                        document.getElementById('games_won_switching').textContent = '0';
+                        startStream();
+                    }
+                });
+        }
+
+        function stopSimulation() {
+            fetch('/stop_simulation', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'stopped') {
+                        running = false;
+                        document.getElementById('start-button').classList.remove('hidden');
+                        document.getElementById('stop-button').classList.add('hidden');
+                        document.getElementById('games_won_not_switching').textContent = data.results.games_won_not_switching;
+                        document.getElementById('games_won_switching').textContent = data.results.games_won_switching;
+                        document.getElementById('results').classList.remove('hidden');
+                    }
+                });
+        }
+
+        function startStream() {
+            const eventSource = new EventSource('/stream');
+            eventSource.onmessage = function(event) {
+                if (event.data.trim()) {
+                    document.getElementById('typewriter').textContent += event.data;
+                    counter++;
+                    document.getElementById('counter').textContent = 'Simulations Run: ' + counter;
+                }
+            };
+            eventSource.onerror = function() {
+                eventSource.close();
+            };
+        }
+    </script>
+</body>
+</html>
