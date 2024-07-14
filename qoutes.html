@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Randomly Stacked Quotes</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="quote-container"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
+<style>body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .quote {
+    position: absolute;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    margin: 20px auto;
+  }
+  
+  .quote.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .quote-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3); /* Adjust overlay color and opacity as needed */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .quote.active .quote-overlay {
+    opacity: 1;
+  }
+  </style>
+  <script>document.addEventListener("DOMContentLoaded", function() {
+    const quotes = [
+      "First quote goes here.",
+      "Second quote goes here.",
+      "Third quote goes here.",
+      "Fourth quote goes here.",
+      "Fifth quote goes here.",
+      "Sixth quote goes here."
+    ];
+  
+    const quoteContainer = document.getElementById("quote-container");
+    let currentQuoteIndex = 0;
+  
+    function showNextQuote() {
+      if (currentQuoteIndex < quotes.length) {
+        const quoteElement = document.createElement("div");
+        quoteElement.classList.add("quote");
+  
+        // Random position within quote container
+        const topPosition = getRandomNumber(0, quoteContainer.clientHeight - 200); // Adjust 200 as needed
+        const leftPosition = getRandomNumber(0, quoteContainer.clientWidth - 400); // Adjust 400 as needed
+        quoteElement.style.top = `${topPosition}px`;
+        quoteElement.style.left = `${leftPosition}px`;
+  
+        // Random z-index for stacking order
+        quoteElement.style.zIndex = Math.floor(Math.random() * 10);
+  
+        quoteElement.innerHTML = `
+          <div class="quote-overlay"></div>
+          <blockquote>${quotes[currentQuoteIndex]}</blockquote>
+        `;
+        quoteContainer.appendChild(quoteElement);
+  
+        // Trigger reflow to animate the newly added quote
+        void quoteElement.offsetWidth; // See: https://gist.github.com/paulirish/5d52fb081b3570c81e3a
+        quoteElement.classList.add("active");
+  
+        currentQuoteIndex++;
+      }
+    }
+  
+    // Initial load
+    showNextQuote();
+  
+    // Listen for scroll event or arrow keypress to show next quote
+    window.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowDown" || event.key === " ") {
+        showNextQuote();
+      }
+    });
+  
+    window.addEventListener("wheel", function(event) {
+      if (event.deltaY > 0) { // Scrolling down
+        showNextQuote();
+      }
+    });
+  
+    // Function to get random number within a range
+    function getRandomNumber(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+  });
+  </script>

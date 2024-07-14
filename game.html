@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontisto@v3.0.4/css/fontisto/fontisto.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <main>
+        <section class="doors-container">
+            <div class="door-numbers">
+                <img src="1.svg" />
+                <img src="1.svg" />
+                <img src="1.svg" />
+            </div>
+            <style>
+              
+            </style>
+
+            <div id="doors"></div>
+        </section>
+        <div id="instruction">
+            <p>Pick a Door!</p>
+            <div class="choices">
+                <button id="yes">YES</button>
+                <button id="no">NO</button>
+            </div>
+            <button id="play-again">PLAY AGAIN?</button>
+        </div>
+
+		<div id="stats">
+			<div id="switches">
+			  <div class="flex-wrapper">
+				<div class="single-chart">
+				  <svg viewBox="0 0 36 36" class="circular-chart orange">
+					<path class="circle-bg"
+					  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+					/>
+					<path class="circle" stroke-dasharray="0, 100"
+					  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+					/>
+					<text x="18" y="20.35" class="percentage win-rate">0%</text>
+				  </svg>
+				</div>
+				<p>Total Switches: <span class="total">0</span></p>
+				<div class="bar">
+				  <span class="win-rate">0%</span>
+				</div>
+				<p>Wins with Switching: <span class="wins-switch">0</span></p>
+			  </div>
+			</div>
+			<div id="stays">
+			  <div class="flex-wrapper">
+				<div class="single-chart">
+				  <svg viewBox="0 0 36 36" class="circular-chart green">
+					<path class="circle-bg"
+					  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+					/>
+					<path class="circle" stroke-dasharray="0, 100"
+					  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+					/>
+					<text x="18" y="20.35" class="percentage win-rate">0%</text>
+				  </svg>
+				</div>
+				<p>Total Stays: <span class="total">0</span></p>
+				<div class="bar">
+				</div>
+				<p>Wins without Switching: <span class="wins-stay">0</span></p>
+			  </div>
+			</div>
+			<div id="total-wins">
+			  <p>Total Wins: <span class="total-wins">0</span></p>
+			</div>
+		  </div>
+		  <div id="total-games">
+			<p>Total Games Played: <span class="total-games">0</span></p>
+		  </div>
+		  
+		
+        <div id="controls">
+            <h3>Options</h3>
+            <label>
+                # of doors:&nbsp;
+                <select id="nb-doors" autocomplete="off">
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </label>
+            <button id="autorun" class="play">Auto run</button>
+            <input type="range" id="speed-slider" min="20" max="1000" value="500" step="1" />
+        </div>
+    </main>
+    <script src="sketch.js"></script>
+</body>
+
+</html>
