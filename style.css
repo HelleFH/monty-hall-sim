@@ -1,19 +1,44 @@
 
-  :root {
-    --orange: #f89e4f;
-    --purple: #9253a1;
-    --red: #f16164;
-  }
+  @import url("https://fonts.googleapis.com/css?family=Signika+Negative:300,400&display=swap");
   
-  * {
+  *,
+  *:before,
+  *:after {
     box-sizing: border-box;
+    letter-spacing: 0.04em;
   }
-  
-  html,
   body {
-    background-color: #fff;
-    font-family: 'GT-Maru', sans-serif;
+    font-family: "Signika Negative", sans-serif;
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
   }
+
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  color: #333;
+  text-align: center;
+}
+
+.explanation {
+  margin-top: 20px;
+}
+
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+
   .content {
     /* Styling for the content inside the door */
     position: absolute;
@@ -22,14 +47,32 @@
     transform: translate(-50%, -50%);
     text-align: center;
   }
-  
-  .content img {
-    /* Styling for the images */
-    max-width: 150px;
-    max-height: auto;
-    display: block; /* Ensures image is centered properly */
-    margin: 0 auto; /* Centers image horizontally */
+  @keyframes fadeInAndBlink {
+    0% {
+        opacity: 0;
+    }
+    10% {      opacity: 1;}
+    20% {
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
+
+    100% {
+      opacity: 1;
   }
+
+}
+.content img {
+  max-width: 150px;
+  max-height: auto;
+  display: block;
+  margin: 0 auto;
+  margin-top: 3em;
+  opacity: 0; /* Start with opacity 0 */
+  animation: fadeInAndBlink 2s forwards; /* Apply fade-in and blink animation over 2 seconds */
+}
   
   .hidden {
     visibility: hidden;
@@ -60,27 +103,47 @@
     opacity: 0.8;
   }
   
-  p {
-    font-size: 1.8rem;
-    margin: 1rem 0;
-  }
-  
+
   #doors {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    width:100%;
+    justify-content: space-between;
+    width:900px;
     gap: 1rem;
+    padding-left: 6.5em;
+    padding-right: 8em;
+    padding-top: 3em;
   }
-  .doors-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    width:100%;
 
+
+.doors-container::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    max-width:900px;
+    height: 100%;
+    background-image: url('game.gif'); /* GIF file */
+    background-size: contain;
+    background-position: top center;
+    background-repeat: no-repeat;
+    animation: playOnce 5s forwards, fadeInImage 1s 11s forwards; /* Play the animation once for 10 seconds and then fade in the image */
+    z-index: -1; /* Ensure the GIF is behind other content */
+    opacity: 1; /* Ensure the GIF is initially visible */
+    margin:0 auto;
 }
 
+/* Transition for smooth transition from GIF to static image */
+.doors-container {
+    display:flex; 
+    justify-content: center;
+}
+
+
+  @keyframes playOnce {
+      to {
+          background-image: url(game.png); /* After animation ends, remove the background image */
+      }
+  }
 .door-numbers {
     display: flex;
     flex-direction: row;
@@ -95,21 +158,34 @@
     width: 8rem;
     position: relative;
 }
-
-.door {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-top: 200.0000%;
-    padding-bottom: 0;
-    overflow: hidden;
-    will-change: transform;
-    background-image: url('door.svg');
-    background-size: cover;
-  
-   
+/* Keyframes for the delay */
+@keyframes delayBackgroundImage {
+  0% {
+      background-image: none; /* Start with no background image */
+  }
+  99% {
+      background-image: none; /* Maintain no background image until near the end */
+  }
+  100% {
+      background-image: url('door.svg'); /* Set the background image at the end of the animation */
+  }
 }
 
+/* The door class with initial styles */
+.door {
+  position: relative;
+  height: 0;
+  padding-top: 210.0000%;
+  padding-bottom: 0;
+  overflow: hidden;
+  will-change: transform;
+  background-position: top center;
+  background-size: cover;
+  animation: delayBackgroundImage 5s forwards;
+  background-image: url('door.svg');
+
+}
+.door:active{transform:scale(0.95)}
 @keyframes pulse {
   /*   Outward Pulse */
     25% {
@@ -120,19 +196,7 @@
 
   }
   
-   .door:hover {
-    -webkit-animation-name: pulse;
-    animation-name: pulse;
-    -webkit-animation-duration: 0.5s;
-    animation-duration: 0.5s;
-    -webkit-animation-timing-function: ease-in-out;
-    animation-timing-function:ease-in-out;
-    -webkit-animation-iteration-count: 1;
-    animation-iteration-count: 1;
-    transform:scale(1.05) 
-  }  
 
-  .door:active {transform: scale(1);}
   
   #stats {
     display: flex;
@@ -211,11 +275,7 @@
     cursor: default;
 }
 
-.door-container.picked > .door {
-    border-width: 5px;
-}
-
-.door-container.picked > .content::after {
+.door-container.picked > .content::before {
     content: '';
     display: block;
     width: 2rem; /* Adjust size as needed */
@@ -227,35 +287,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
 }
 
-.door-container.picked > .content .gif {
-    width: 2rem; /* Adjust size as needed */
-    height: 2rem; /* Adjust size as needed */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-  
-  .door-container.picked.won > .content::after {
-    color: forestgreen;
-  }
-  
-  .door-container.small {
-    width: 4rem;
-    height: 6rem;
-  }
-  
-  .door-container.small > .door {
-    font-size: 1.5rem;
-  }
-  
-  .door-container.small > .content {
-    font-size: 2rem;
-  }
-  
   #instruction {
     margin: 2rem 0;
     min-height: 120px;
@@ -289,9 +323,7 @@
   
 
   #controls {
-    position: fixed;
-    top: 0;
-    right: 0;
+  
     padding: 2rem;
     text-align: right;
   

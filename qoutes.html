@@ -21,17 +21,24 @@
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow: hidden; /* Prevent scrolling */
+  }
+  
+  #quote-container {
+    position: relative;
+    width: 80%;
+    height: 80%;
   }
   
   .quote {
     position: absolute;
-    max-width: 600px;
+    max-width: 400px; /* Adjust as needed */
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     opacity: 0;
+    transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
-    margin: 20px auto;
   }
   
   .quote.active {
@@ -45,7 +52,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.3); /* Adjust overlay color and opacity as needed */
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust overlay color and opacity as needed */
     opacity: 0;
     transition: opacity 0.5s ease;
   }
@@ -66,6 +73,7 @@
   
     const quoteContainer = document.getElementById("quote-container");
     let currentQuoteIndex = 0;
+    let currentZIndex = 1; // Start z-index from 1
   
     function showNextQuote() {
       if (currentQuoteIndex < quotes.length) {
@@ -78,9 +86,9 @@
         quoteElement.style.top = `${topPosition}px`;
         quoteElement.style.left = `${leftPosition}px`;
   
-        // Random z-index for stacking order
-        quoteElement.style.zIndex = Math.floor(Math.random() * 10);
-  
+        // Increment z-index for stacking order
+        quoteElement.style.zIndex = currentZIndex++;
+        
         quoteElement.innerHTML = `
           <div class="quote-overlay"></div>
           <blockquote>${quotes[currentQuoteIndex]}</blockquote>

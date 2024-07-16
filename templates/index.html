@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>Monty Hall Problem Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#startButton').click(function() {
@@ -14,25 +17,29 @@
                     success: function(response) {
                         // Update UI with simulation results
                         $('#simulationCount').text(response.simulation_count);
+                        $('#totalAttempts').text(response.total_attempts);
                         $('#totalWinsRandom').text(response.total_wins_random);
                         $('#totalWinsKeep').text(response.total_wins_keep);
                         $('#totalWinsSwitch').text(response.total_wins_switch);
 
-                        // Plot simulation histories (optional)
-                        plotHistory(response.history_random, '#historyRandom', 'Random Strategy');
-                        plotHistory(response.history_keep, '#historyKeep', 'Keep Strategy');
-                        plotHistory(response.history_switch, '#historySwitch', 'Switch Strategy');
+                        // Plot cumulative success rates
+                        plotCumulativeSuccess(response.history_random, response.history_keep, response.history_switch);
+
+                        // Display all events
+                        displayEvents(response.events_all);
                     }
                 });
             });
 
-            function plotHistory(history, elementId, title) {
-                var x = Array.from(Array(history.length).keys());
-                var y = history;
+            function plotCumulativeSuccess(historyRandom, historyKeep, historySwitch) {
+                var x = Array.from(Array(historyRandom.length).keys());
+                var yRandom = historyRandom;
+                var yKeep = historyKeep;
+                var ySwitch = historySwitch;
 
                 var plt = document.createElement('canvas');
-                plt.id = elementId.substring(1);
-                $(elementId).empty().append(plt);
+                plt.id = 'cumulativeChart';
+                $('#cumulativeChartContainer').empty().append(plt);
 
                 var ctx = plt.getContext('2d');
                 var chart = new Chart(ctx, {
@@ -40,22 +47,43 @@
                     data: {
                         labels: x,
                         datasets: [{
-                            label: title,
-                            data: y,
+                            label: 'Random Strategy',
+                            data: yRandom,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'Keep Strategy',
+                            data: yKeep,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'Switch Strategy',
+                            data: ySwitch,
                             borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderWidth: 1,
                             fill: false
                         }]
                     },
                     options: {
                         scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
+                });
+            }
+
+            function displayEvents(events) {
+                var eventsContainer = $('#eventsContainer');
+                eventsContainer.empty();
+                events.forEach(function(event) {
+                    eventsContainer.append('<p>' + event + '</p>');
                 });
             }
         });
@@ -71,14 +99,20 @@
     </form>
     
     <h2>Simulation Results</h2>
-    <p>Simulation Count: <span id="simulationCount"></span></p>
-    <p>Total Wins Random: <span id="totalWinsRandom"></span></p>
-    <p>Total Wins Keep: <span id="totalWinsKeep"></span></p>
-    <p>Total Wins Switch: <span id="totalWinsSwitch"></span></p>
+    <div id="statsPanel" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+        <p>Simulation Count: <span id="simulationCount"></span></p>
+        <p>Total Attempts: <span id="totalAttempts"></span></p>
+        <p>Total Wins Random: <span id="totalWinsRandom"></span></p>
+        <p>Total Wins Keep: <span id="totalWinsKeep"></span></p>
+        <p>Total Wins Switch: <span id="totalWinsSwitch"></span></p>
+    </div>
 
     <h2>Simulation History</h2>
-    <div id="historyRandom" style="width: 600px; height: 400px;"></div>
-    <div id="historyKeep" style="width: 600px; height: 400px;"></div>
-    <div id="historySwitch" style="width: 600px; height: 400px;"></div>
+    <div id="cumulativeChartContainer">
+        <canvas id="cumulativeChart" width="800" height="400"></canvas>
+    </div>
+
+    <h2>Event Logs</h2>
+    <div id="eventsContainer"></div>
 </body>
 </html>

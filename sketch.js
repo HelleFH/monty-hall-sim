@@ -1,5 +1,5 @@
 const doors = [];
-const trainImage = 'car.png'; // Adjust path as per your file structure
+const carImage = 'car.png'; // Adjust path as per your file structure
 const goatImage = 'goat.png'; // Adjust path as per your file structure
 
 let totalDoors = 3;
@@ -35,16 +35,17 @@ function clearStats() {
 
 function reset() {
   for (const door of doors) {
-    door.prize = goatImage; // Set initial prize to goat image
+    door.prize = goatImage;
     door.revealed = false;
     select('.door', door).html(door.index + 1);
+    select('.content', door).html(''); 
     door.removeClass('revealed');
     door.removeClass('picked');
     door.removeClass('won');
   }
 
   const winner = random(doors);
-  winner.prize = trainImage; // Set the winner's prize to the train image
+  winner.prize = carImage; // Set the winner's prize to the train image
 
   state = 'PICK';
   select('#instruction > p').html('Pick a Door!');
@@ -135,7 +136,7 @@ function checkWin(hasSwitched) {
     select('.content', door).html(`<img src="${door.prize}">`);
   }
 
-  if (pickedDoor.prize === trainImage) {
+  if (pickedDoor.prize === carImage) {
     pickedDoor.addClass('won');
     if (hasSwitched) {
       stats.totalSwitchWins++;
@@ -179,16 +180,15 @@ function chooseDoor(hasSwitched = false) {
     checkWin(hasSwitched);
   }
 }
-
 function revealDoor() {
   const options = doors.filter(
-    (door, i) => i !== pickedDoor.index && door.prize !== trainImage
+    (door, i) => i !== pickedDoor.index && door.prize !== carImage
   );
 
-  // The player got the right door!
+  // The player picked the right door
   if (options.length === doors.length - 1) {
-    // Randomly remove 1
-    options.splice(floor(random(options.length)), 1);
+    // Randomly remove one door from options
+    options.splice(Math.floor(Math.random() * options.length), 1);
   }
 
   for (const revealedDoor of options) {
@@ -199,12 +199,13 @@ function revealDoor() {
   const lastDoor = doors.find(
     (door) => !door.hasClass('revealed') && !door.hasClass('picked')
   );
+  
   select('#instruction > p').html(
-    `Do you want to switch to door #${lastDoor.index + 1}?`
+    `The host opened door ${options[0].index + 1}! Do you want to switch to door #${lastDoor.index + 1}?`
   );
 
   if (autoMode) {
-    if (random(1) < 0.5) {
+    if (Math.random() < 0.5) {
       timeoutId = setTimeout(() => chooseDoor(true), getDelayValue());
     } else {
       timeoutId = setTimeout(() => chooseDoor(false), getDelayValue());
@@ -213,7 +214,6 @@ function revealDoor() {
     select('#instruction > .choices').show();
   }
 }
-
 function pickDoor() {
   if (state !== 'PICK') return;
   state = 'REVEAL';

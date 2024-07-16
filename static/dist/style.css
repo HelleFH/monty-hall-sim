@@ -1,0 +1,152 @@
+.section {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.section:nth-child(1) {
+  height: 180vh;
+}
+.section:nth-child(2) {
+  height: 140vh;
+}
+.section:nth-child(3) {
+  height: 120vh;
+}
+.section:nth-child(4) {
+  height: 250vh;
+}
+.section:nth-child(5), .section:nth-child(6) {
+  height: 110vh;
+}
+.section:nth-child(7) {
+  height: 120vh;
+}
+
+.bg1 {
+  background-color: #ccc;
+}
+
+.bg2 {
+  background-color: #333;
+  color: #F8F0E3;
+}
+
+.bg3 {
+  background-color: gray;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.revealUp {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.spacer {
+  height: 50vh;
+  background-color: #000;
+}
+
+.bg0 {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-image: url("background.jpg");
+  /* Replace 'background.jpg' with your image path */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  /* Text color */
+  text-align: center;
+}
+.bg0 .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Dark overlay with transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section p {
+  max-width: 80%;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  padding: 1em;
+  font-weight: 500;
+}
+
+.quote-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150vh;
+  width: 100%;
+  max-width: 1000px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+  margin-bottom: 3em;
+}
+.quote-section .cite {
+  font-family: "Special Elite";
+  font-variant: small-caps;
+}
+.quote-section #quote-container {
+  position: relative;
+  width: 80%;
+  height: 80%;
+}
+.quote-section .quote {
+  font-family: "Special Elite";
+  font-style: italic;
+  line-height: 1.2em;
+  font-size: 20px;
+  padding-bottom: 0.5em;
+  position: absolute;
+  max-width: 400px;
+  min-width: 300px;
+  padding: 1em;
+  background-image: url(quote-bg.svg);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.quote-section .quote.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quote-section .quote.active .quote-overlay {
+  opacity: 1;
+}
+.quote-section .quote .quote-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
