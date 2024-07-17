@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="section bg0">
+<div class=" bg0">
     <div class="overlay" style="display:flex; flex-direction:column;">
         <h1>THE MONTY HALL PROBLEM</h1>
         <p>The Monty Hall problem, named after the host of the American television game show "Let's Make a Deal,"
@@ -28,32 +28,34 @@
         <h1 class="revealUp"> The Game </h1>
         <h2 class="revealUp">Here’s how it works: 
         </h2>
-        <h3 class="revealUp">There are 3 doors, two of them with a goat behind it, one with a car. 
+        <div  class="revealUp intro-item">
+        <h3>There are 3 doors, two of them with a goat behind it, one with a car. 
         </h3>
-        <img class="revealUp" style="max-width:800px" src="/intro1.png" />
+        <img class="revealUp "src="/intro1.png" />
+    </div>
 
-          <div class="revealUp">
+          <div class="revealUp intro-item">
           <h3> The contestant picks whatever door they think might have the car</h3> 
-            <img  style="max-width:800px" src="/intro2.png" />
+            <img  src="/intro2.png" />
         </div>
-        <div class="revealUp">
+        <div class="revealUp intro-item">
 
             <h3>
          The host opens a door with a goat, thus eliminating one losing door
             </h3>
-          <img  style="max-width:800px" src="/intro3.png" />
+          <img  src="/intro3.png" />
         </div>
 
-        <div class="revealUp">
+        <div class="revealUp intro-item">
 
           <h3>
     The contestant is given the option to switch to the other unopened door or to stay with the chosen door
           </h3>
-        <img  style="max-width:800px" src="/intro4.png" />
+        <img  src="/intro4.png" />
 
     </div>
 
-        <p class="revealUp">At this point, most of us would probably just go with out gut feeling or even be inclined to stay with our initial choice. That's not be a good strategy, however, if you want the odds to stay in your favour.
+        <p class="revealUp">At this point, most of us would probably just go with out gut feeling or even be inclined to stay with our initial choice. That's not a good strategy, however, if you want the odds to be in your favour.
         </p>
     </section>
 
@@ -69,7 +71,7 @@
         <h1 class="revealUp">A Controversial Answer</h1>
         <h2 class="revealUp">Marilyn Von Savant had a somewhat surprising answer to this question: </h2>
        <img class="revealUp" src="/answer.png"  style="max-height:300px;"/>
-        <p class="revealUp">Switch and double your chances, she told the reader. Her answer doesn't seem to make sense. With 1 car and 1 goat left surely 
+        <p class="revealUp">So switch and double your chances. Her answer doesn't seem to make sense. With 1 car and 1 goat left surely 
             it doesn't matter if you switch doors? Logic tells us that each door had a 1/3 chance of holding the car when the game started. After the host eliminated a goat door, the odds must be 1/2 for each remaining door. Either your chosen door has the car or the other door has it, a 50/50 case? Right? 
         </p>
     </section>
@@ -106,8 +108,10 @@
             <br><br>
             If you still have a hard time wrapping your head around it all, you can click below to try the Monty Hall problem in action
         </p>
-        <a>Simulate</a>
-        <a>Play</a>
+        <div class="play-buttons">
+        <a class="btn simulate">Simulate</a>
+    <a class="btn play">Play</a>
+</div>
     </section>
 
     <div class="spacer"></div>
@@ -123,7 +127,7 @@
             trigger: elem,
             start: "top 80%",
             end: "bottom 20%",
-            markers: true,
+            markers: false,
             onEnter: function () {
                 gsap.fromTo(
                     elem,
@@ -181,61 +185,76 @@
         { text: "I apologize for my initial criticism. Your logic and explanation are sound. Switching doors is the better strategy.", author: "Earl D. Sacerdote, Ph.D., Mathematics Professor, Massachusetts Institute of Technology" },
         { text: "My students and I conducted the Monty Hall experiment, and the results consistently showed that switching is indeed the best strategy.", author: "George Brant, Mathematics Instructor, Boston University" },
         { text: "I ran computer simulations and found that the probability of winning when switching is indeed 2/3.", author: "David H. Ropeik, Consultant, Risk Perception and Communication" },
-        { text: "As a professional mathematician, I’m very concerned with the general public’s lack of mathematical skills. Please help by confessing your error and in the future being more careful.", author: "Charles Reid, Ph.D., University of Florida" },
         { text: "Having reconsidered my initial reaction, I now see that your explanation is mathematically accurate. I apologize for my earlier comments.", author: "Robert W. Tufts, Ph.D., Professor of Mathematics, Columbia University" },
         { text: "You have done a great service by clarifying this counterintuitive problem for the general public.", author: "John M. Obrien, Professor of Statistics, University of Chicago" }
     ];
-
     function showQuotes(quotes, containerId) {
-        const quoteContainer = document.getElementById(containerId);
-        let currentQuoteIndex = 0;
-        let currentZIndex = 1;
+    const quoteContainer = document.getElementById(containerId);
+    let currentQuoteIndex = 0;
+    let currentZIndex = 1;
 
-        function showNextQuote() {
-            if (currentQuoteIndex < quotes.length) {
-                const quoteElement = document.createElement("div");
-                quoteElement.classList.add("quote");
+    function isMobile() {
+        return window.innerWidth <= 768; // You can adjust this breakpoint as needed
+    }
+    function isTablet() {
+        return window.innerWidth <= 1000; // You can adjust this breakpoint as needed
+    }
 
-                const topPosition = getRandomNumber(0, quoteContainer.clientHeight - 200);
-                const leftPosition = getRandomNumber(0, quoteContainer.clientWidth - 400);
-                quoteElement.style.top = `${topPosition}px`;
-                quoteElement.style.left = `${leftPosition}px`;
+    function showNextQuote() {
+        if (currentQuoteIndex < quotes.length) {
+            const quoteElement = document.createElement("div");
+            quoteElement.classList.add("quote");
 
-                quoteElement.style.zIndex = currentZIndex++;
-                quoteElement.innerHTML = `
-                    <div class="quote-overlay"></div>
-                    <div class="blockquote">"${quotes[currentQuoteIndex].text}"</div>
-                    <div class="cite">${quotes[currentQuoteIndex].author}</div>
-                `;
-                quoteContainer.appendChild(quoteElement);
-
-                gsap.to(quoteElement, {opacity: 1, y: 0, duration: 1, delay: currentQuoteIndex * 0.5});
-                currentQuoteIndex++;
+            let topPosition, leftPosition;
+            if (isMobile()) {
+                topPosition = getRandomNumber(0, quoteContainer.clientHeight - 200);
+                leftPosition = getRandomNumber(0, quoteContainer.clientWidth - 100);
+            } 
+            if (isTablet()) {
+                topPosition = getRandomNumber(0, quoteContainer.clientHeight - 300);
+                leftPosition = getRandomNumber(0, quoteContainer.clientWidth - 400);
+            } else {
+                topPosition = getRandomNumber(0, quoteContainer.clientHeight - 400);
+                leftPosition = getRandomNumber(0, quoteContainer.clientWidth - 600); // Updated to ensure it covers the full width
             }
-        }
 
-        gsap.to(window, {
-            scrollTrigger: {
-                trigger: `#${containerId}`,
-                start: "top center",
-                onEnter: () => {
-                    showNextQuote();
-                    for (let i = 1; i < quotes.length; i++) {
-                        setTimeout(showNextQuote, i * 2000);
-                    }
-                }
-            }
-        });
+            quoteElement.style.top = `${topPosition}px`;
+            quoteElement.style.left = `${leftPosition}px`;
 
-        function getRandomNumber(min, max) {
-            return Math.random() * (max - min) + min;
+            quoteElement.style.zIndex = currentZIndex++;
+            quoteElement.innerHTML = `
+                <div class="quote-overlay"></div>
+                <div class="blockquote">"${quotes[currentQuoteIndex].text}"</div>
+                <div class="cite">${quotes[currentQuoteIndex].author}</div>
+            `;
+            quoteContainer.appendChild(quoteElement);
+
+            gsap.to(quoteElement, {opacity: 1, y: 0, duration: 1, delay: currentQuoteIndex * 0.5});
+            currentQuoteIndex++;
         }
     }
 
-    showQuotes(quotes1, "quote-container-1");
+    gsap.to(window, {
+        scrollTrigger: {
+            trigger: `#${containerId}`,
+            start: "top center",
+            onEnter: () => {
+                showNextQuote();
+                for (let i = 1; i < quotes.length; i++) {
+                    setTimeout(showNextQuote, i * 2000);
+                }
+            }
+        }
+    });
+
+    function getRandomNumber(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+}
+
+showQuotes(quotes1, "quote-container-1");
     showQuotes(quotes2, "quote-container-2");
 });
-
 </script>
 
 </body>
